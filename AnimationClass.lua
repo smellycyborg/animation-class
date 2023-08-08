@@ -52,18 +52,13 @@ function animationPrototype:setTrack(player: Player)
 	end
 	
 	local function trackEnded()
-		self.ended:Fire()
-		
-		private.tracks[player]:Destroy()
-		private.tracks[player] = nil
+		self.ended:Fire(player)
 	end
 	
 	local track = animator:LoadAnimation(private.animation)
 	track.Ended:Connect(trackEnded)
 	
 	private.tracks[player] = track
-	
-	return track
 end
 
 function animationPrototype:play(player: Player, isLooped: boolean)
@@ -78,11 +73,7 @@ function animationPrototype:play(player: Player, isLooped: boolean)
 	
 	if isLooped then
 		task.spawn(function()
-			while table.find(private.playersPlaying, player) and task.wait() do
-				if not track then 
-					track = self:setTrack(player)
-				end
-				
+			while table.find(private.playersPlaying, player) and task.wait() do	
 				track:Play()
 				track.Ended:Wait()
 			end
@@ -95,7 +86,7 @@ function animationPrototype:stop(player)
 	
 	table.remove(private.playersPlaying, table.find(private.playersPlaying, player))
 	
-	if private.tracks[player] then
+	if private.tracks[player] then	
 		private.tracks[player]:Stop()
 		private.tracks[player]:Destroy()
 	end
