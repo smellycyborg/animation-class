@@ -73,7 +73,7 @@ function animationPrototype:play(player: Player, isLooped: boolean)
 	
 	if isLooped then
 		task.spawn(function()
-			while table.find(private.playersPlaying, player) and task.wait() do	
+			while table.find(private.playersPlaying, player) do	
 				track:Play()
 				track.Ended:Wait()
 			end
